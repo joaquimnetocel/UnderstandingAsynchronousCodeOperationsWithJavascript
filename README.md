@@ -49,7 +49,7 @@ The javascript call stack is a synchronous data structure that keeps track of th
 
 Now let's see a function with a very specific behavior: the **setTimeout function**. When you call the setTimeout function, after being pushed to the call stack, it is immediately transferred to the browser’s web APIs. These web APIs take up the responsibility of waiting for the operation to complete (in this case, waiting for the timeout period to complete). While these web APIs are tracking the status of the asynchronous operation, the call stack will continue the execution of the rest of the items in the call stack.
 
-[SETTIMEOUT ILUSTRATION](./folderImages/fileSettimeoutIllustration.gif)
+![SETTIMEOUT ILUSTRATION](./folderImages/fileSettimeoutIllustration.gif)
 
 Once your setTimeout function is completed, it is pushed to (what is known as) the macrotask queue. This queue stores the asynchronous tasks that have been completed before they are pushed back to the call stack to be finally executed.
 
