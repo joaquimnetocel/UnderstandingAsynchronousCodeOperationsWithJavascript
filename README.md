@@ -188,7 +188,7 @@ After 3 seconds the call to `reject` moves the promise object to "rejected" stat
 
 ![PROMISE OBJECT RESOLVE IMAGE](./folderImages/filePromiseObjectReject.png)
 
-
+The properties state and result of the Promise object are internal. We can’t directly access them. We can use the method `.then` for that. It will be is described below.
 
 
 
