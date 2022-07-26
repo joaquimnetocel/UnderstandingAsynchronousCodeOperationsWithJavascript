@@ -33,7 +33,7 @@ As we just seen in the previous example, _javascript_ is synchronous by nature. 
 
 Indeed, the **javascript engine** natively has one call stack and one memory heap at its disposal.
 
-![JAVASCRIPT ENGINE IMAGE](./fileJavascriptEngine.png)
+![JAVASCRIPT ENGINE IMAGE](./folderImages/fileJavascriptEngine.png)
 
 However, each time you run Javascript code, there is a broader picture to understand. The _javascript engine_ runs inside a bigger container: the **runtime environment** (with its various APIs). _Javascript_ can run in many environments, but here we are going to focus on the **browser runtime environment** (web development inside the browser). Each browser has its runtime environment. This is where quite a lot of the web development magic happens. Another example of runtime environment is [**Node**](https://nodejs.org/), but it won't be our focus here.
 
