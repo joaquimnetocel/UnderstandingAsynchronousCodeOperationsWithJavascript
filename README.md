@@ -43,29 +43,161 @@ The browser runtime provides you with a bunch of utilitarian tools that are pivo
 
 Among the many advantages of web APIs, they also facilitate concurrency in your application. Let’s see how.
 
-## THE CALL STACK, THE MACROTASK QUEUE AND THE EVENT LOOP
+## THE CALL STACK, THE TASK QUEUE AND THE EVENT LOOP
 
 The javascript call stack is a synchronous data structure that keeps track of the function calls in your code. When a function is called, it is pushed to the call stack and when it is done executing, it is popped out.
 
-Now let's see a function with a very specific behavior: the **setTimeout function**. When you call the setTimeout function, after being pushed to the call stack, it is immediately transferred to the browser’s web APIs. These web APIs take up the responsibility of waiting for the operation to complete (in this case, waiting for the timeout period to complete). While these web APIs are tracking the status of the asynchronous operation, the call stack will continue the execution of the rest of the items in the call stack.
+Now let's see a function with a very specific behavior: the **setTimeout function**. Here is the code that we are going to analyze:
+
+```javascript
+console.log("Print this 1st");
+
+setTimeout(() => {
+  console.log("Print this 3rd");
+}, 3000);
+
+console.log("Print this 2nd");
+```
+
+When you call the setTimeout function, after being pushed to the call stack, it is immediately transferred to the browser’s web APIs. These web APIs take up the responsibility of waiting for the operation to complete (in this case, waiting 3000 miliseconds for the timeout period to complete). While these web APIs are tracking the status of the asynchronous operation, the call stack will continue the execution of the rest of the items in the call stack.
 
 ![SETTIMEOUT ILUSTRATION](./folderImages/fileSettimeoutIllustration.gif)
 
-Once your setTimeout function is completed, it is pushed to (what is known as) the macrotask queue. This queue stores the asynchronous tasks that have been completed before they are pushed back to the call stack to be finally executed.
+Once your setTimeout function is completed, it is pushed to (what is known as) the **tasks queue** (or **callback queue**). This queue stores the asynchronous tasks that have been completed before they are pushed back to the call stack to be finally executed.
 
-The **event loop** is the last part of this equation that is responsible for pushing the items waiting in the callback queue to the main call stack. It closely monitors the call stack and the macrotask queue. When the call stack is empty, it picks the topmost item from the macrotask queue and pushes it to the call stack for execution. There is also anothe queue to consider called the microtask queue, but we are going to talk about it later.
+The **event loop** is the last part of this equation that is responsible for pushing the items waiting in the tasks queue to the main call stack. It closely monitors the call stack and the task queue. When the call stack is empty, it picks the topmost item from the task queue and pushes it to the call stack for execution. There is also another queue to consider called the microtask queue, but we are going to talk about it later.
 
-Here is a code to illustrate:
+## PROMISES
 
-```html
-<script>
-    const functionMacrotask = function () {
-        console.log("I PASSED THROUGH THE MACROTASK QUEUE.");
-    };
-    setTimeout(functionMacrotask, 5000);
-    console.log("END OF THE CODE");
-</script>
+A promise, in our context, is a javascript tool used to run some task that is going to take some time to finish. Just like in real life, there are two possible outcomes of a promise: either the promise is kept (resolved) or some error occurs and the promise promise is broken (rejected).
+
+The constructor syntax for a promise object is:
+
+```javascript
+new Promise(functionExecutor);
 ```
+
+The function passed to new Promise is called the **executor** (`functionExecutor`). When `new Promise` is created, the executor runs automatically. It contains the producing code which should eventually produce the result.
+
+Here is a basic example of a promise:
+
+```javascript
+const functionExecutor = function(){
+    setTimeout(() => {
+        console.log("DONE");
+    }, 3000);
+};
+
+new Promise(functionExecutor);
+
+console.log("END OF THE CODE");
+```
+
+After running this code, we can see that the message "END OF THE CODE" is shown before the message "DONE". This happened because the executor code contained a _setTimeout_ and, as we have seen earlier, this function is going to be executed by the web API of the (browser) runtime environment, without blocking the execution flow.
+
+Now let's see what happens when the executor function contains time consuming code that will be executed by the javascript engine:
+
+```javascript
+const functionExecutor = function(){
+    const constBigArray = [];
+    for (let i = 0; i < 10000000; i++) {
+        constBigArray[i] = i * i;
+    }
+    console.log(constBigArray);
+    console.log("THE ARRAY IS READY");
+};
+
+new Promise(functionExecutor);
+
+console.log("END OF THE CODE");
+```
+
+Run the code and now you will see that "THE ARRAY IS READ" is shown before "END OF THE CODE". That happened because the _executor function_ code was executed by the javascript engine, that is syncrhonous by nature (blocking).
+
+## RESOLVE, REJECT AND PROMISE STATES
+
+The _executor_ function may have two arguments that are going to be named here as **resolve** and **reject**. These arguments are functions pre-defined by the JavaScript engine, so we don’t need to create them. The _executor_ should call:
+
+* `resolve(value)`: if the promised task is finished successfully (`value` is the promise result).
+* `reject(error)`: if an error has occurred (`error` is an error object).
+
+So to summarize: the executor runs automatically and attempts to perform a task. When it is finished with the attempt, it calls resolve if it was successful or reject if there was an error.
+
+As a proxy for future results, the promisse can be put in a promise object that tracks its state and result:
+
+```javascript
+const constPromiseObject = new Promise(functionExecutor);
+```
+
+The promise object (`constPromiseObject`) returned by the `new Promise` constructor has these two internal properties:
+
+* state: initially "pending", then changes to either "fulfilled" when resolve is called or "rejected" when reject is called.
+* result: initially undefined, then changes to value when resolve(value) called or error when reject(error) is called.
+
+![PROMISE OBJECT IMAGE](./folderImages/filePromiseObject.png)
+
+Here is an example:
+
+```javascript
+const functionExecutor = function(resolve, reject){
+    setTimeout(() => {
+        console.log("THIS WILL BE SHOWN AFTER THE END");
+        resolve("done");
+    }, 3000);
+};
+
+const constPromiseObject = new Promise(functionExecutor);
+
+console.log(constPromiseObject);
+
+console.log("END OF THE CODE");
+
+// WAIT 3 SECONDS AND THEN RUN:
+
+console.log(constPromiseObject);
+```
+
+After 3 seconds of “waiting”, the executor calls `resolve("done")` to produce the result. This changes the state of the promise object:
+
+![PROMISE OBJECT RESOLVE IMAGE](./folderImages/filePromiseObjectResolve.png)
+
+That was an example of a successful job completion, a “fulfilled promise”.
+
+And now an example of the executor rejecting the promise with an error:
+
+```javascript
+const functionExecutor = function(resolve, reject){
+    setTimeout(() => {
+        console.log("THIS WILL BE SHOWN AFTER THE END");
+        reject("error");
+    }, 3000);
+};
+
+const constPromiseObject = new Promise(functionExecutor);
+
+console.log(constPromiseObject);
+
+console.log("END OF THE CODE");
+
+// WAIT 3 SECONDS AND THEN RUN:
+
+console.log(constPromiseObject);
+```
+
+After 3 seconds the call to `reject` moves the promise object to "rejected" state:
+
+![PROMISE OBJECT RESOLVE IMAGE](./folderImages/filePromiseObjectReject.png)
+
+
+
+
+
+
+```javascript
+const constPromiseObject = new Promise(functionExecutor).then(functionHandleSuccessfulResult, functionHandleError);
+```
+
+
 
 <!-- ## EXAMPLE (CODE THAT TAKES SOME TIME TO RUN PLACED INSIDE A FUNCTION)
 
@@ -87,20 +219,7 @@ Now, lets see how we can run this code several times, putting it inside a functi
 
 Once again, we can notice the blocking nature of javascript. -->
 
-## EXAMPLE (_setTimeout_ AND THE MACROTASK QUEUE)
-
-
-
-```html
-<script>
-    const functionMacrotask = function () {
-        console.log("I PASSED THROUGH THE MACROTASK QUEUE.");
-    };
-    setTimeout(functionMacrotask, 5000);
-</script>
-```
-
-## EXAMPLE (BASIC PROMISE AND THE MICROTASK QUEUE)
+<!-- ## EXAMPLE (BASIC PROMISE AND THE MICROTASK QUEUE)
 
 ```html
 <script>
@@ -116,7 +235,7 @@ Once again, we can notice the blocking nature of javascript. -->
     new Promise(functionPromisedTasks).then(functionMicrotask);
     console.log("END OF THE CODE");
 </script>
-```
+``` -->
 
 <!-- <script>
 	// BASIC PROMISE RESULT
