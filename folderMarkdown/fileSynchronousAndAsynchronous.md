@@ -63,7 +63,7 @@ When you call the setTimeout function, after being pushed to the call stack, it 
 
 ![SETTIMEOUT ILUSTRATION](./folderImages/fileSettimeoutIllustration.gif)
 
-Once your setTimeout function is completed, it is pushed to (what is known as) the **tasks queue** (or **callback queue**). This queue stores the asynchronous tasks that have been completed before they are pushed back to the call stack to be finally executed.
+Once your setTimeout function is completed, it is pushed to (what is known as) the **tasks queue** (or **callback queue** or **macrotask queue**). This queue stores the asynchronous tasks that have been completed before they are pushed back to the call stack to be finally executed.
 
 The **event loop** is the last part of this equation that is responsible for pushing the items waiting in the tasks queue to the main call stack. It closely monitors the call stack and the task queue. When the call stack is empty, it picks the topmost item from the task queue and pushes it to the call stack for execution. There is also another queue to consider called the microtask queue, but we are going to talk about it later.
 

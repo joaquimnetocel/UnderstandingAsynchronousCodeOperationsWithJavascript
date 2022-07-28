@@ -131,7 +131,7 @@ To access the value passed by the resolve or reject functions, we can use `.then
 const constPromiseObject = new Promise(functionExecutor).then(functionHandleSuccessfulResult, functionHandleError);
 ```
 
-It takes two optional arguments: a callback for a resolved case (`functionHandleSuccessfulResult`) and another for a rejected one (`functionHandleError`). These functions have one argument:
+It takes two optional arguments: a callback handler for a resolved case (`functionHandleSuccessfulResult`) and another for a rejected one (`functionHandleError`). These functions have one argument:
 
 * The promise result, provided by the _resolve function_ is passed to `functionHandleSuccessfulResult` through its argument.
 * The promise error, provided by the _reject function_ is passed to `functionHandleError` through its argument.
