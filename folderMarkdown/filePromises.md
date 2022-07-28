@@ -17,13 +17,13 @@ Here is a basic example of a promise:
 ```javascript
 const functionExecutor = function(){
     setTimeout(() => {
-        console.log("DONE");
+        console.log("DONE"); // THIS MESSAGE IS SHOWN LAST.
     }, 3000);
 };
 
 new Promise(functionExecutor);
 
-console.log("END OF THE CODE");
+console.log("END OF THE CODE"); // THIS MESSAGE IS SHOWN FIRST.
 ```
 
 After running this code, we can see that the message "END OF THE CODE" is shown before the message "DONE". This happened because the executor code contained a _setTimeout_ and, as we have seen earlier, this function is going to be executed by the web API of the (browser) runtime environment, without blocking the execution flow.
@@ -37,15 +37,17 @@ const functionExecutor = function(){
         constBigArray[i] = i * i;
     }
     console.log(constBigArray);
-    console.log("THE ARRAY IS READY");
+    console.log("THE ARRAY IS READY"); // THIS MESSAGE IS SHOWN FIRST.
 };
 
 new Promise(functionExecutor);
 
-console.log("END OF THE CODE");
+console.log("END OF THE CODE"); // THIS MESSAGE IS SHOWN LAST.
 ```
 
 Run the code and now you will see that "THE ARRAY IS READ" is shown before "END OF THE CODE". That happened because the _executor function_ code was executed by the javascript engine, that is syncrhonous by nature (blocking).
+
+In short, I would say that promises make sense when they contain code that will be executed by the web API.
 
 ## RESOLVE, REJECT AND PROMISE STATES
 
