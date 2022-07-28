@@ -70,3 +70,5 @@ What is happening here is:
 * "END OF THE CODE." shows first, because it’s a regular synchronous call.
 * "PROMISE FINISHED." shows second, because `functionHandleResult` passes through the microtask queue.
 * "TIMEOUT FINISHED." shows last, because `functionCallback` passes through the macrotask queue.
+
+[BACK](../README.md)
