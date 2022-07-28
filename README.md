@@ -2,7 +2,7 @@
 
 ## INTRODUCTION
 
-Understanding how asynchronous code can be performed with javascript can be a difficult journey. Here, our objective is to address the subject without highlighting more technical aspects, but rather prioritizing the understanding of concepts. For more technical details, [click here](https://javascript.info/async).
+Understanding how asynchronous code can be performed with javascript can be a difficult journey. Here, our objective is to address the subject without highlighting more technical aspects, but rather prioritizing the understanding of concepts.
 
 ## INDEX
 
@@ -28,3 +28,7 @@ Click on the links bellow to navigate to specific sections:
 * MICROTASK QUEUE
 * ASYNCHRONOUS FUNCTIONS
 * ASYNC/AWAIT
+
+## REFERENCES
+
+For more technical details, [click here](https://javascript.info/async).
