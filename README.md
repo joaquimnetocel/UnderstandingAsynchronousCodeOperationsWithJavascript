@@ -6,11 +6,13 @@ Understanding how asynchronous code can be performed with javascript can be a di
 
 ## INDEX
 
+Click on the links bellow to navigate to specific sections:
+
 * [SYNCHRONOUS AND ASYNCHRONOUS CODE OPERATIONS IN WEB APPLICATIONS](./folderMarkdown/fileSynchronousAndAsynchronous.md)
 
 * [PROMISES](./folderMarkdown/filePromises.md)
 
-* MICROTASKS (UNDER CONTRUCTION)
+* [MICROTASKS](./folderMarkdown/fileMicrotasks.md)
 
 * ASYNC/AWAIT (UNDER CONSTRUCTION)
 
@@ -23,5 +25,6 @@ Understanding how asynchronous code can be performed with javascript can be a di
 * EVENT LOOP
 * PROMISES
 * PROMISE CHAINING
+* MICROTASK QUEUE
 * ASYNCHRONOUS FUNCTIONS
 * ASYNC/AWAIT
