@@ -22,8 +22,8 @@ const functionAsynchronous = async function () {
     return 1;
 };
 
-const constPromiseObject = functionAsynchronous();
-console.log(constPromiseObject);
+const promiseObject = functionAsynchronous();
+console.log(promiseObject);
 ```
 
 We could explicitly return a promise, which would be the same:
@@ -35,20 +35,20 @@ const functionAsynchronous = function () {
     });
 };
 
-const constPromiseObject = functionAsynchronous();
-console.log(constPromiseObject);
+const promiseObject = functionAsynchronous();
+console.log(promiseObject);
 ```
 
 So, async ensures that the function returns a promise, and wraps non-promises in it. Simple enough, right? But not only that. There’s also the `await` keyword, that works only inside async functions and  makes JavaScript wait until that promise settles and returns its result.
 
 ```javascript
-const constPromiseObject = new Promise((resolve) => {
-    setTimeout(() => resolve("done!"), 3000);
+const promiseObject = new Promise((resolve) => {
+    setTimeout(() => resolve("DONE"), 3000);
 });
 
 const functionAsynchronous = async function () {
-    const constResult = await constPromiseObject; // WAIT UNTIL THE PROMISE RESOLVES (*)
-    console.log(constResult); // "done!"
+    const stringResult = await promiseObject; // WAIT UNTIL THE PROMISE RESOLVES (*).
+    console.log(stringResult); // "DONE".
 };
 
 console.log("BEFORE");

@@ -17,11 +17,11 @@ Writing pure synchronous code that is blocking and halts execution while waiting
 Let's see a simple javascript code that takes some time to run:
 
 ```javascript
-const constBigArray = [];
+const arraySquares = [];
 for (let i = 0; i < 10000000; i++) {
-  constBigArray[i] = i * i;
+  arraySquares[i] = i * i;
 }
-console.log(constBigArray);
+console.log(arraySquares);
 console.log("END OF THE CODE");
 ```
 

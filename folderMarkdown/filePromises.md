@@ -32,11 +32,11 @@ Now let's see what happens when the executor function contains time consuming co
 
 ```javascript
 const functionExecutor = function(){
-    const constBigArray = [];
+    const arraySquares = [];
     for (let i = 0; i < 10000000; i++) {
-        constBigArray[i] = i * i;
+        arraySquares[i] = i * i;
     }
-    console.log(constBigArray);
+    console.log(arraySquares);
     console.log("THE ARRAY IS READY"); // THIS MESSAGE IS SHOWN FIRST.
 };
 
@@ -61,10 +61,10 @@ So to summarize: the executor runs automatically and attempts to perform a task.
 As a proxy for future results, the promisse can be put in a promise object that tracks its state and result:
 
 ```javascript
-const constPromiseObject = new Promise(functionExecutor);
+const promiseObject = new Promise(functionExecutor);
 ```
 
-The promise object (`constPromiseObject`) returned by the `new Promise` constructor has these two internal properties:
+The promise object (`promiseObject`) returned by the `new Promise` constructor has these two internal properties:
 
 * state: initially "pending", then changes to either "fulfilled" when resolve is called or "rejected" when reject is called.
 * result: initially undefined, then changes to value when resolve(value) called or error when reject(error) is called.
@@ -81,15 +81,15 @@ const functionExecutor = function(resolve, reject){
     }, 3000);
 };
 
-const constPromiseObject = new Promise(functionExecutor);
+const promiseObject = new Promise(functionExecutor);
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 
 console.log("END OF THE CODE");
 
 // WAIT 3 SECONDS AND THEN RUN:
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 ```
 
 After 3 seconds of “waiting”, the executor calls `resolve("done")` to produce the result. This changes the state of the promise object:
@@ -108,15 +108,15 @@ const functionExecutor = function(resolve, reject){
     }, 3000);
 };
 
-const constPromiseObject = new Promise(functionExecutor);
+const promiseObject = new Promise(functionExecutor);
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 
 console.log("END OF THE CODE");
 
 // WAIT 3 SECONDS AND THEN RUN:
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 ```
 
 After 3 seconds the call to `reject` moves the promise object to "rejected" state:
@@ -130,13 +130,13 @@ The properties state and result of the Promise object are internal. We can’t d
 To access the value passed by the resolve or reject functions, we can use `.then()`.
 
 ```javascript
-const constPromiseObject = new Promise(functionExecutor).then(functionHandleSuccessfulResult, functionHandleError);
+const promiseObject = new Promise(functionExecutor).then(functionHandleResolve, functionHandleReject);
 ```
 
-It takes two optional arguments: a callback handler for a resolved case (`functionHandleSuccessfulResult`) and another for a rejected one (`functionHandleError`). These functions have one argument:
+It takes two optional arguments: a callback handler for a resolved case (`functionHandleResolve`) and another for a rejected one (`functionHandleReject`). These functions have one argument:
 
-* The promise result, provided by the _resolve function_ is passed to `functionHandleSuccessfulResult` through its argument.
-* The promise error, provided by the _reject function_ is passed to `functionHandleError` through its argument.
+* The promise result, provided by the _resolve function_ is passed to `functionHandleResolve` through its argument.
+* The promise error, provided by the _reject function_ is passed to `functionHandleReject` through its argument.
 
 Here is an example:
 
@@ -148,25 +148,25 @@ const functionExecutor = function(resolve, reject){
     }, 3000);
 };
 
-const functionHandleSuccessfulResult = function(argWhatWasResolved){
-    console.log(`I AM THE CALLBACK OF THE RESOLVED CASE AND THE PROMISE RESULT IS '${argWhatWasResolved}'`);
+const functionHandleResolve = function(argResult){
+    console.log(`I AM THE CALLBACK OF THE RESOLVED CASE AND THE PROMISE RESULT IS '${argResult}'`);
     return "NEW PROMISE RESULT";
 };
 
-const functionHandleError = function(argWhatWasRejected){
-    console.log(`I AM THE CALLBACK OF THE REJECTED CASE AND THE PROMISE ERROR IS '${argWhatWasRejected}'`);
+const functionHandleReject = function(argResult){
+    console.log(`I AM THE CALLBACK OF THE REJECTED CASE AND THE PROMISE ERROR IS '${argResult}'`);
     return "NEW PROMISE ERROR";
 };
 
-const constPromiseObject = new Promise(functionExecutor).then(functionHandleSuccessfulResult, functionHandleError);
+const promiseObject = new Promise(functionExecutor).then(functionHandleResolve, functionHandleReject);
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 
 console.log("END OF THE CODE");
 
 // WAIT 3 SECONDS AND THEN RUN:
 
-console.log(constPromiseObject);
+console.log(promiseObject);
 ```
 
 As we can see by runnnig the code, `.then()` returns a new promise and hence a promise chaining is possible. So, let's talk about promise chaining...
@@ -179,26 +179,26 @@ Promises provide a way to perform asynchronous tasks one after another. It looks
 const functionExecutor = function(resolve, reject) {
     setTimeout(() => resolve(1), 1000); // (*)
 };
-const functionHandleFirstResult = function(result) { // (**)
-    alert(result); // 1
-    return result * 2;
+const functionFirstHandler = function(argResult) { // (**)
+    alert(argResult); // 1
+    return argResult * 2;
 };
-const functionHandleSecondResult = function(result) { // (***)
-    alert(result); // 2
-    return result * 2;
+const functionSecondHandler = function(argResult) { // (***)
+    alert(argResult); // 2
+    return argResult * 2;
 };
-const functionHandleThirdResult = function(result) {
-  alert(result); // 4
-  return result * 2;
+const functionThirdHandler = function(argResult) {
+  alert(argResult); // 4
+  return argResult * 2;
 };
 
-new Promise(functionExecutor).then(functionHandleFirstResult).then(functionHandleSecondResult).then(functionHandleThirdResult);
+new Promise(functionExecutor).then(functionFirstHandler).then(functionSecondHandler).then(functionThirdHandler);
 ```
 
 The idea is that the result is passed through the chain of .then handlers. Here the flow is:
 
 * The initial promise resolves in 1 second (*),
-* Then `functionHandleFirstResult` is called (**), which in turn creates a new promise (resolved with 2 value).
+* Then `functionFirstHandler` is called (**), which in turn creates a new promise (resolved with 2 value).
 * The next then (***) gets the result of the previous one, processes it (doubles) and passes it to the next handler.
 * …and so on.
 
@@ -208,7 +208,7 @@ As the result is passed along the chain of handlers, we can see a sequence of al
 
 The whole thing works, because every call to `.then` returns a new promise, so that we can call the next .then on it.
 
-## RETURNIN PROMISES
+## RETURNING PROMISES
 
 A handler, used in `.then(handler)` may create and return a promise. In that case further handlers wait until it settles, and then get its result. For instance:
 
@@ -217,23 +217,23 @@ A handler, used in `.then(handler)` may create and return a promise. In that cas
 const functionExecutor = function(resolve, reject) {
     setTimeout(() => resolve(1), 1000);
 };
-const functionHandleFirstResult = function(result) {
-    alert(result); // 1
+const functionFirstHandler = function(argResult) {
+    alert(argResult); // 1
     return new Promise((resolve, reject) => { // (*)
-      setTimeout(() => resolve(result * 2), 1000);
+      setTimeout(() => resolve(argResult * 2), 1000);
     });
 };
-const functionHandleSecondResult = function(result) { // (**)
-    alert(result); // 2
+const functionSecondHandler = function(argResult) { // (**)
+    alert(argResult); // 2
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve(result * 2), 1000);
+      setTimeout(() => resolve(argResult * 2), 1000);
     });
 };
-const functionHandleThirdResult = function(result) {
-    alert(result); // 4
+const functionThirdHandler = function(argResult) {
+    alert(argResult); // 4
 };
 
-new Promise(functionExecutor).then(functionHandleFirstResult).then(functionHandleSecondResult).then(functionHandleThirdResult);
+new Promise(functionExecutor).then(functionFirstHandler).then(functionSecondHandler).then(functionThirdHandler);
 ```
 
 The output is the same as in the previous example: 1 → 2 → 4, but now with 1 second delay between alert calls. This way, returning promises allows us to build chains of asynchronous actions.

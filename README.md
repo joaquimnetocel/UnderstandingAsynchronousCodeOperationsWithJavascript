@@ -9,14 +9,10 @@ Understanding how asynchronous code can be performed with javascript can be a di
 Click on the links bellow to navigate to specific sections:
 
 * [SYNCHRONOUS AND ASYNCHRONOUS CODE OPERATIONS IN WEB APPLICATIONS](./folderMarkdown/fileSynchronousAndAsynchronous.md)
-
 * [PROMISES](./folderMarkdown/filePromises.md)
-
 * [MICROTASKS](./folderMarkdown/fileMicrotasks.md)
-
-* [FETCH](./folderMarkdown/fileFetch.md)
-
 * [ASYNC/AWAIT](./folderMarkdown/fileAsyncAwait.md)
+* [FETCH](./folderMarkdown/fileFetch.md)
 
 ## KEYWORDS
 
@@ -30,6 +26,7 @@ Click on the links bellow to navigate to specific sections:
 * MICROTASK QUEUE
 * ASYNCHRONOUS FUNCTIONS
 * ASYNC/AWAIT
+* FETCH
 
 ## REFERENCES
 

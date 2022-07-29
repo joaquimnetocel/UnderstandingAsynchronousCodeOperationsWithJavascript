@@ -2,8 +2,6 @@
 
 ## THE BEHAVIOR
 
-Promise handlers .then/.catch/.finally are always asynchronous.
-
 Even when a Promise is immediately resolved, the code bellow it will still run before its handlers.
 
 Here’s a demo:
@@ -14,21 +12,21 @@ const functionExecutor = function(resolve){
 };
 
 const functionHandleResult = function(){
-    console.log("PROMISE DONE."); // THIS MESSAGE SHOWS SECOND 
+    console.log("PROMISE DONE"); // THIS MESSAGE SHOWS SECOND. 
 };
 
-const constPromiseObject = new Promise(functionExecutor).then(functionHandleResult);
+new Promise(functionExecutor).then(functionHandleResult);
 
-console.log("END OF THE CODE."); // THIS MESSAGE SHOWS FIRST
+console.log("END OF THE CODE"); // THIS MESSAGE SHOWS FIRST.
 ```
 
-If you run it, you see "END OF THE CODE." first, and then "PROMISE DONE.". That’s strange, because the promise is definitely done from the beginning. Why did the .then trigger afterwards? What’s going on?
+If you run it, you see "END OF THE CODE" first, and then "PROMISE DONE". That’s strange, because the promise is definitely done from the beginning. Why did the `.then` trigger afterwards? What’s going on? This strange behavior is due to the microtask queue that we will study next.
 
 ## MICROTASKS QUEUE
 
 Asynchronous tasks need proper management. For that, Javascript uses an internal queue referred to as the **microtask queue**. Here is how it works... When a promise is ready, its handlers are put into the microtask queue (they are not executed yet). When the JavaScript engine becomes free from the current code, it takes a task from the queue and executes it.
 
-That’s why "END OF THE CODE." in the example above shows first.
+That’s why "END OF THE CODE" in the example above shows first.
 
 If there’s a chain with multiple `.then`, then every one of them is executed asynchronously. That is, it first gets queued, then executed when the current code is complete and previously queued handlers are finished.
 
@@ -50,7 +48,7 @@ For instance, take a look on the following example, where setTimeout instruction
 
 ```javascript
 const functionCallback = function(){
-   console.log("TIMEOUT FINISHED."); // THIS MESSAGE SHOWS LAST.
+   console.log("TIMEOUT FINISHED"); // THIS MESSAGE SHOWS LAST.
 };
 setTimeout(functionCallback, 0);
 
@@ -58,17 +56,17 @@ const functionExecutor = function(resolve){
     resolve();
 };
 const functionHandleResult = function(){
-    console.log("PROMISE FINISHED."); // THIS MESSAGE SHOWS SECOND. 
+    console.log("PROMISE FINISHED"); // THIS MESSAGE SHOWS SECOND. 
 };
 new Promise(functionExecutor).then(functionHandleResult);
 
-console.log("END OF THE CODE.") // THIS MESSAGE SHOWS FIRST
+console.log("END OF THE CODE") // THIS MESSAGE SHOWS FIRST.
 ```
 
 What is happening here is:
 
-* "END OF THE CODE." shows first, because it’s a regular synchronous call.
-* "PROMISE FINISHED." shows second, because `functionHandleResult` passes through the microtask queue.
-* "TIMEOUT FINISHED." shows last, because `functionCallback` passes through the macrotask queue.
+* "END OF THE CODE" shows first, because it’s a regular synchronous call.
+* "PROMISE FINISHED" shows second, because `functionHandleResult` passes through the microtask queue.
+* "TIMEOUT FINISHED" shows last, because `functionCallback` passes through the macrotask queue.
 
 [BACK](../README.md)
