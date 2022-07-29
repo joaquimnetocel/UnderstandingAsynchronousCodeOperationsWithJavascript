@@ -13,7 +13,7 @@ const functionAsynchronous = async function() {
 In practical terms, asynchronous functions have two distinguishing characteristics, which we will discuss in more detail:
 
 * They always return a promise.
-* They acept the await keyword.
+* They acept the `await` keyword.
 
 For instance, the following function returns a resolved promise with the result of 1. Let's test it:
 
@@ -59,3 +59,5 @@ console.log("AFTER");
 The function execution “pauses” at the line (*) and resumes when the promise settles, with result becoming its result. Let’s emphasize: `await` literally suspends the function execution until the promise settles, and then resumes it with the promise result. Meanwhile, the JavaScript engine can do other jobs: execute other scripts, handle events, etc. It’s just a more elegant syntax of getting the promise result than promise `.then`. And, it’s easier to read and write.
 
 It's worth noting that if we try to use the `await` keyword in a non-asyn function, there would be a syntax error. As stated earlier, **await only works inside an async function**.
+
+[BACK](../README.md)

@@ -85,3 +85,5 @@ Response provides multiple promise-based methods to access the body in various f
 * `response.formData()` – return the response as FormData object (explained in the next chapter).
 * `response.blob()` – return the response as Blob (binary data with type).
 * `response.arrayBuffer()` – return the response as ArrayBuffer (low-level representation of binary data).
+
+[BACK](../README.md)
