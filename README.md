@@ -14,7 +14,9 @@ Click on the links bellow to navigate to specific sections:
 
 * [MICROTASKS](./folderMarkdown/fileMicrotasks.md)
 
-* ASYNC/AWAIT (UNDER CONSTRUCTION)
+* [FETCH](./folderMarkdown/fileFetch.md)
+
+* [ASYNC/AWAIT](./folderMarkdown/fileAsyncAwait.md)
 
 ## KEYWORDS
 
